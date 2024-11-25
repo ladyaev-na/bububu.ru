@@ -25,4 +25,9 @@ Route::get('/categories/{category}/edit',[CategoryController::class,'edit'])->na
 Route::put('/categories/{category}/edit',[CategoryController::class,'update'])->name('categories.update');
 Route::delete('/categories/{category}',[CategoryController::class,'destroy'])->name('categories.destroy');*/
 
-Route::resource('categories', CategoryController::class);
+Route::middleware('auth:web')->resource('categories', CategoryController::class)->except(['index','show']);
+Route::get('/categories',[CategoryController::class,'index'])->name('categories.index');
+Route::get('/categories/{category}',[CategoryController::class,'show'])->name('categories.show');
+
+
+Route::resource('products', \App\Http\Controllers\Web\ProductController::class);

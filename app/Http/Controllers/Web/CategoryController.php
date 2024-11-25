@@ -5,10 +5,16 @@ namespace App\Http\Controllers\Web;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Web\CategoryRequest;
 use App\Models\Category;
+use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Http\Request;
+
+// добавляем пространство имен для политики
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class CategoryController extends Controller
 {
+    // добавляем трейд для политики
+    use AuthorizesRequests;
     public function index()
     {
         $categories = Category::all();
@@ -16,10 +22,14 @@ class CategoryController extends Controller
     }
     public function create()
     {
+        $this->authorize('create', Category::class);
+
         return view('categories.create');
     }
     public function store(CategoryRequest $request)
     {
+        $this->authorize('create', Category::class);
+
         $category = Category::create($request->validated());
         return redirect()->route('categories.index');
     }
@@ -38,6 +48,8 @@ class CategoryController extends Controller
     }
     public function destroy(Category $category)
     {
+        $this->authorize('delete', $category);
+
         $category->delete();
         return redirect()->route('category.index');
     }
